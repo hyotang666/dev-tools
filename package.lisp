@@ -77,6 +77,7 @@
     ;;;; Recursively collect all dependencies license.
     #:check-license
     #:all-dependencies
+    #:find-dependency-route
 
     ;;;; Log output. Use instead of `CL:PRINT`.
     #:log

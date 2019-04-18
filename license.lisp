@@ -65,4 +65,12 @@
   (format t "~VT~A~%" *indent* (asdf:coerce-name system))
   (let((*indent* (+ 3 *indent*)))
     (map nil #'print-all-dependencies (asdf:system-depends-on(asdf:find-system system)))))
-    
+
+(defun find-dependency-route(dependency system)
+  (labels((rec(dependency system &optional route)
+	    (loop :for dep :in (mapcar #'asdf:find-system(asdf:system-depends-on system))
+		  :when (eq dependency dep)
+		  :nconc (list(mapcar #'asdf:coerce-name (nreconc route (list system dependency))))
+		  :else :nconc (rec dependency dep (cons system route)))))
+    (rec (asdf:find-system dependency)
+	 (asdf:find-system system))))
