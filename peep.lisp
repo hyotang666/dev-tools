@@ -1,11 +1,18 @@
 (in-package :dev-tools)
 
-(defun peep(object)
-  (report(%peep object)))
+(defgeneric peep (object))
 
-(defun %peep(object)
-  (list* (class-name(class-of object))
-	 (property<=obj object)))
+(defmethod peep (o)
+  (format t "~&;; ~A"(type-of o))
+  (print o))
+
+(defmethod peep ((o standard-object))
+  (format t "~&;; ~A"(type-of o))
+  (let*((properties(property<=obj o))
+	(length(loop :for elt :in properties :by #'cddr
+		     :maximize (length(symbol-name elt)))))
+    (loop :for (slot value . nil) :on properties :by #'cddr
+	  :do (format t "~&~VA = ~S"length slot value))))
 
 (defun property<=obj (object)
   (loop :for slot :in (slots<=obj object)
@@ -18,9 +25,16 @@
   (mapcar #'closer-mop:slot-definition-name
 	  (closer-mop:class-slots(class-of object))))
 
-(defun report(list)
-  (format t "~&;; ~A"(car list))
-  (let((length(loop :for elt :in (cdr list) :by #'cddr
-		    :maximize (length(symbol-name elt)))))
-    (loop :for (slot value . nil) :on (cdr list) :by #'cddr
-	  :do (format t "~&~VA = ~S"length slot value))))
+(defmethod peep ((o hash-table))
+  (format t "~&;; ~A"(type-of o))
+  (let(ks vs)
+    (maphash (lambda(k v)
+	       (push (prin1-to-string k) ks)
+	       (push v vs))
+	     o)
+    (let((length(or (loop :for k :in ks
+			  :maximize (length k))
+		    0)))
+      (loop :for k :in ks
+	    :for v :in vs
+	    :do (format t "~&~VA = ~S"length k v)))))
