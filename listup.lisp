@@ -2,40 +2,57 @@
 
 (defun listup(package &optional target)
   (do-external-symbols(s package)
-    (let((roll(symbol-roll s)))
+    (let((roles(symbol-roles s)))
       (when(or (null target)
-	       (eq roll target))
-	(format t "~&~%~A~@[ ~A~]"
-		(cl-ansi-text:yellow(princ-to-string s))
-		(case roll
-		  (function
-		   (format nil "~:S~%~@[~A~]"
-			   (millet:lambda-list s)
-			   (documentation s 'function)))
-		  (variable
-		   (format nil "; = ~A~%~@[~A~]"
-			   (if(boundp s)
-			     (prin1-to-string(symbol-value s))
-			     "; Unbound")
-			   (documentation s 'variable)))
-		  (type
-		    (format nil "; of type ~A~%~@[~A~]"
-			    (class-name (class-of (find-class s)))
-			    (documentation s 'type)))
-		  ((nil) nil))))))
+	       (find target roles))
+	(dolist(role roles)
+	  (unless(eq role :command)
+	    (format t "~&~%~A~@[ ~A~]"
+		    (cl-ansi-text:yellow(princ-to-string s))
+		    (case role
+		      ((:function :macro :generic-function)
+		       (format nil "~:S~%~@[~A~]"
+			       (millet:lambda-list s)
+			       (documentation s 'function)))
+		      (:variable
+			(format nil "; = ~A~%~@[~A~]"
+				(if(boundp s)
+				  (prin1-to-string(symbol-value s))
+				  "; Unbound")
+				(documentation s 'variable)))
+		      (:type
+			(format nil "; Type name.~%~@[~A~]"
+				(documentation s 'type)))
+		      (:class
+			(let((class(find-class s)))
+			  (format nil "; of type ~A~%~@[~A~]~?"
+				  (class-name (class-of class))
+				  (documentation s 'type)
+				  "~{~&~%~A ; Slot name.~@[ ~A~]~}"
+				  (list (loop :for slot :in (c2mop:class-direct-slots class)
+					      :for name = (c2mop:slot-definition-name slot)
+					      :when (eq :external (nth-value 1(find-symbol (symbol-name name)package)))
+					      :collect (cl-ansi-text:yellow (princ-to-string name))
+					      :and
+					      :collect (documentation slot t)))))))))))))
   (values))
 
-(defun symbol-roll(s)
-  (cond
-    ((and (fboundp s)
-	  (not(special-operator-p s)))
-     'function)
-    ((or (millet:special-symbol-p s)
-		       (constantp s))
-     'variable)
-    ((find-class s nil)
-     'type)
-    (t nil)))
+(defun symbol-roles(s)
+  `(,@(when (fboundp s)
+	(unless (special-operator-p s)
+	  (if (macro-function s)
+	    '(:macro :command)
+	    (if(typep (symbol-function s) 'standard-generic-function)
+	      '(:generic-function :command)
+	      '(:function :command)))))
+     ,@(when(or (millet:special-symbol-p s)
+		(constantp s))
+	 '(:variable))
+     ,@(when(find-class s nil)
+	 '(:class))
+     ,@(when(ignore-errors(typep '#:dummy s))
+	 '(:type))
+     ))
 
 (defun list-all-packages(symbol)
   (loop :for package :in (cl:list-all-packages)
