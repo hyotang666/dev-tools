@@ -1,18 +1,21 @@
 (in-package :dev-tools)
 
-(defgeneric peep (object))
+(defgeneric peep (object &optional recp))
 
-(defmethod peep (o)
+(defmethod peep (o &optional recp)
   (format t "~&;; ~A"(type-of o))
   (print o))
 
-(defmethod peep ((o standard-object))
+(defmethod peep ((o standard-object)&optional recp)
   (format t "~&;; ~A"(type-of o))
   (let*((properties(property<=obj o))
 	(length(loop :for elt :in properties :by #'cddr
 		     :maximize (length(symbol-name elt)))))
     (loop :for (slot value . nil) :on properties :by #'cddr
-	  :do (format t "~&~VA = ~S"length slot value))))
+	  :do (format t "~&~VA = "length slot)
+	  (if recp
+	    (peep value)
+	    (prin1 value)))))
 
 (defun property<=obj (object)
   (loop :for slot :in (slots<=obj object)
@@ -25,7 +28,7 @@
   (mapcar #'closer-mop:slot-definition-name
 	  (closer-mop:class-slots(class-of object))))
 
-(defmethod peep ((o hash-table))
+(defmethod peep ((o hash-table)&optional recp)
   (format t "~&;; ~A"(type-of o))
   (let(ks vs)
     (maphash (lambda(k v)
@@ -37,4 +40,17 @@
 		    0)))
       (loop :for k :in ks
 	    :for v :in vs
-	    :do (format t "~&~VA = ~S"length k v)))))
+	    :do (format t "~&~VA = "length k)
+	    (if recp
+	      (peep v)
+	      (prin1 v))))))
+
+(defmethod peep((list list)&optional recp)
+  (format t "~&;; LIST")
+  (if recp
+    (progn (format t "~&(")
+	   (mapc #'peep list)
+	   (format t ")"))
+    (print list)))
+
+
