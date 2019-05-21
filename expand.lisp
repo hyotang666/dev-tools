@@ -40,7 +40,7 @@
       `(macroexpand ',form)
       `(macroexpand-1 ',form))))
 
-(defun put-expand(form &optional(name "~/expanded"))
+(defun put-expand(form &optional(name "~/expanded.lisp"))
   (with-open-file(*standard-output* name :direction :output
 				    :if-does-not-exist :create
 				    :if-exists :supersede)
