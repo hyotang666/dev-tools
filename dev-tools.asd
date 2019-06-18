@@ -12,6 +12,7 @@
    #+sbcl "trestrul"    ; utilities for tree structured list.
    "lambda-fiddle"      ; tiny utilities for lambda-list processing.
    "tsort"              ; Topological sorting.
+   "split-sequence"     ; Utiltity for split sequence.
    )
   :components ((:file "package")
                (:file "use" :depends-on ("package"))

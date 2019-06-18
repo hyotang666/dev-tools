@@ -11,9 +11,14 @@
 		    (cl-ansi-text:yellow(princ-to-string s))
 		    (case role
 		      ((:function :macro :generic-function)
-		       (format nil "~:S~%~@[~A~]"
-			       (millet:lambda-list s)
-			       (documentation s 'function)))
+		       (with-output-to-string(*standard-output*)
+			 (let((lines(split-sequence:split-sequence #\newline (format nil "~:S" (millet:lambda-list s)))))
+			   (loop :initially (write-string (car lines))
+				 :for line :in (cdr lines)
+				 :do (format t "~%~VT~A"
+					     (1+ (length (symbol-name s)))
+					     line)
+				 :finally (format t "~@[~A~]"(documentation s 'function))))))
 		      (:variable
 			(format nil "; = ~A~%~@[~A~]"
 				(if(boundp s)
