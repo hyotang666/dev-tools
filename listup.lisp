@@ -33,7 +33,7 @@
 			  (format nil "; of type ~A~%~@[~A~]~?"
 				  (class-name (class-of class))
 				  (documentation s 'type)
-				  "~{~&~%~A ; Slot name.~@[ ~A~]~}"
+				  "~{~&~%~A ; Slot name.~@[~%~A~]~}"
 				  (list (loop :for slot :in (c2mop:class-direct-slots class)
 					      :for name = (c2mop:slot-definition-name slot)
 					      :when (eq :external (nth-value 1(find-symbol (symbol-name name)package)))
