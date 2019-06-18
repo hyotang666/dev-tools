@@ -39,7 +39,8 @@
 					      :when (eq :external (nth-value 1(find-symbol (symbol-name name)package)))
 					      :collect (cl-ansi-text:yellow (princ-to-string name))
 					      :and
-					      :collect (documentation slot t)))))))))))))
+					      :collect (handler-bind((warning #'muffle-warning))
+							 (documentation slot t))))))))))))))
   (values))
 
 (defun symbol-roles(s)
