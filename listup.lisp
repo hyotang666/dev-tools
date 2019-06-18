@@ -18,7 +18,7 @@
 				 :do (format t "~%~VT~A"
 					     (1+ (length (symbol-name s)))
 					     line)
-				 :finally (format t "~@[~A~]"(documentation s 'function))))))
+				 :finally (format t "~@[~%~A~]"(documentation s 'function))))))
 		      (:variable
 			(format nil "; = ~A~%~@[~A~]"
 				(if(boundp s)
