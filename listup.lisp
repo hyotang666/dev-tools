@@ -56,8 +56,11 @@
 	 '(:variable))
      ,@(when(find-class s nil)
 	 '(:class))
-     ,@(when(ignore-errors(typep '#:dummy s))
-	 '(:type))
+     ,@(handler-case(typep '#:dummy s)
+	 (error())
+	 (:no-error(return)
+	   (declare(ignore return))
+	   '(:type)))
      ))
 
 (defun list-all-packages(symbol)
