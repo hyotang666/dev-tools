@@ -1,6 +1,6 @@
 (in-package :dev-tools)
 
-(defun listup(package &optional target)
+(defun listup(package &optional target &aux (*package*(find-package package)))
   (do-external-symbols(s package)
     (let((roles(symbol-roles s)))
       (when(or (null target)
