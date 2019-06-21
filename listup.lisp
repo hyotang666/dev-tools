@@ -12,12 +12,12 @@
 		    (case role
 		      ((:function :macro :generic-function)
 		       (with-output-to-string(*standard-output*)
-			 (let((lines(split-sequence:split-sequence #\newline (format nil "~:S" (millet:lambda-list s)))))
-			   (loop :initially (write-string (car lines))
+			 (let((lines(split-sequence:split-sequence #\newline (format nil "~VT~:S"
+										     (1+(length(symbol-name s)))
+										     (millet:lambda-list s)))))
+			   (loop :initially (write-string (string-left-trim " "(car lines)))
 				 :for line :in (cdr lines)
-				 :do (format t "~%~VT~A"
-					     (1+ (length (symbol-name s)))
-					     line)
+				 :do (format t "~%~A" line)
 				 :finally (format t "~@[~%~A~]"(documentation s 'function))))))
 		      (:variable
 			(format nil "; = ~A~%~@[~A~]"
