@@ -1,6 +1,6 @@
 (in-package :dev-tools)
 
-(defun listup(package &optional target &aux (*package*(find-package package)))
+(defun listup(package &optional target)
   (do-external-symbols(s package)
     (let((roles(symbol-roles s)))
       (when(or (null target)
@@ -12,9 +12,10 @@
 		    (case role
 		      ((:function :macro :generic-function)
 		       (with-output-to-string(*standard-output*)
-			 (let((lines(split-sequence:split-sequence #\newline (format nil "~VT~:S"
-										     (1+(length(symbol-name s)))
-										     (millet:lambda-list s)))))
+			 (let*((*package*(symbol-package s))
+			       (lines(split-sequence:split-sequence #\newline (format nil "~VT~:S"
+										      (1+(length(symbol-name s)))
+										      (millet:lambda-list s)))))
 			   (loop :initially (write-string (string-left-trim " "(car lines)))
 				 :for line :in (cdr lines)
 				 :do (format t "~%~A" line)
