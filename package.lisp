@@ -32,6 +32,8 @@
 
     ;;;; break.
     #:die-after
+    #:enbreak
+    #:debreak
 
     ;;;; expand.
     ;; for macroexpand #M
