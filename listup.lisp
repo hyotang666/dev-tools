@@ -18,7 +18,10 @@
 				(loop :initially (write-string (string-left-trim " "(car lines)))
 				      :for line :in (cdr lines)
 				      :do (format t "~%~A" line)
-				      :finally (format t "~@[~%~A~]"(documentation s 'function)))))))
+				      :finally (format t "~@[~%~A~]~@[~%~A~]"
+						       (when(ignore-errors(fdefinition`(setf ,s)))
+							 "SETFable.")
+						       (documentation s 'function)))))))
 		      (case role
 			((:function :macro :generic-function)
 			 (tune-indent(millet:lambda-list s)))
