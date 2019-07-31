@@ -9,39 +9,46 @@
 	  (unless(eq role :command)
 	    (format t "~&~%~A~@[ ~A~]"
 		    (cl-ansi-text:yellow(princ-to-string s))
-		    (case role
-		      ((:function :macro :generic-function)
-		       (with-output-to-string(*standard-output*)
-			 (let*((*package*(symbol-package s))
-			       (lines(split-sequence:split-sequence #\newline (format nil "~VT~:S"
-										      (1+(length(symbol-name s)))
-										      (millet:lambda-list s)))))
-			   (loop :initially (write-string (string-left-trim " "(car lines)))
-				 :for line :in (cdr lines)
-				 :do (format t "~%~A" line)
-				 :finally (format t "~@[~%~A~]"(documentation s 'function))))))
-		      (:variable
-			(format nil "; = ~A~%~@[~A~]"
-				(if(boundp s)
-				  (prin1-to-string(symbol-value s))
-				  "; Unbound")
-				(documentation s 'variable)))
-		      (:type
-			(format nil "; Type name.~%~@[~A~]"
-				(documentation s 'type)))
-		      (:class
-			(let((class(find-class s)))
-			  (format nil "; of type ~A~%~@[~A~]~?"
-				  (class-name (class-of class))
-				  (documentation s 'type)
-				  "~{~&~%~A ; Slot name.~@[~%~A~]~}"
-				  (list (loop :for slot :in (c2mop:class-direct-slots class)
-					      :for name = (c2mop:slot-definition-name slot)
-					      :when (eq :external (nth-value 1(find-symbol (symbol-name name)package)))
-					      :collect (cl-ansi-text:yellow (princ-to-string name))
-					      :and
-					      :collect (handler-bind((warning #'muffle-warning))
-							 (documentation slot t))))))))))))))
+		    (flet((tune-indent(list)
+			    (with-output-to-string(*standard-output*)
+			      (let*((*package*(symbol-package s))
+				    (lines(split-sequence:split-sequence #\newline (format nil "~VT~:S"
+											   (1+(length(symbol-name s)))
+											   list))))
+				(loop :initially (write-string (string-left-trim " "(car lines)))
+				      :for line :in (cdr lines)
+				      :do (format t "~%~A" line)
+				      :finally (format t "~@[~%~A~]"(documentation s 'function)))))))
+		      (case role
+			((:function :macro :generic-function)
+			 (tune-indent(millet:lambda-list s)))
+			(:variable
+			  (format nil "; = ~A~%~@[~A~]"
+				  (if(boundp s)
+				    (prin1-to-string(symbol-value s))
+				    "; Unbound")
+				  (documentation s 'variable)))
+			(:type
+			  (format nil "; Type name.~%~@[~A~]"
+				  (documentation s 'type)))
+			(:class
+			  (let((class(find-class s)))
+			    (format nil "; of type ~A~%~@[~A~]~?"
+				    (class-name (class-of class))
+				    (documentation s 'type)
+				    "~{~&~%~A ; Slot name.~@[~%~A~]~}"
+				    (list (loop :for slot :in (c2mop:class-direct-slots class)
+						:for name = (c2mop:slot-definition-name slot)
+						:when (eq :external (nth-value 1(find-symbol (symbol-name name)
+											     package)))
+						:collect (cl-ansi-text:yellow (princ-to-string name))
+						:and
+						:collect (handler-bind((warning #'muffle-warning))
+							   (documentation slot t)))))))
+			(:symbol-macro
+			  (format nil "; expanded to ~A"
+				  (tune-indent(macroexpand-1 s))))
+			))))))))
   (values))
 
 (defun symbol-roles(s)
@@ -62,6 +69,8 @@
 	   (:no-error(return)
 	     (declare(ignore return))
 	     '(:type))))
+     ,@(when(nth-value 1 (macroexpand-1 s))
+	 '(:symbol-macro))
      ))
 
 (defun list-all-packages(symbol)
