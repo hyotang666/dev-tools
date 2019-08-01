@@ -17,6 +17,7 @@
     #:*traces*
     #:tlabels
     #:tcond
+    #:tand
 
     ;;;; dribble.
     #:with-dribble ; #D

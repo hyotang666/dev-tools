@@ -104,3 +104,10 @@
 			      `(,(car bind)(format *trace-output* "~%~VT;;; TRACING ~S = NIL."
 						   (* 2 *TRACE-INDENT*)',(car bind)))))))
        ,@body))
+
+(defmacro tand(&body clauses)
+  `(AND ,@(mapcar (lambda(clause)
+		    `(or ,clause
+			 (FORMAT *TRACE-OUTPUT* "~%;;; TRACING, AND fails in cluase: ~S"
+				 ',clause)))
+		  clauses)))
