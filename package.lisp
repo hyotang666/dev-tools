@@ -18,6 +18,8 @@
     #:tlabels
     #:tcond
     #:tand
+    #:tlet
+    #:tlet*
 
     ;;;; dribble.
     #:with-dribble ; #D
