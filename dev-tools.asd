@@ -1,6 +1,6 @@
 ; vim: ft=lisp et
 (defsystem :dev-tools
-  :version "0.0.0"
+  :version "0.0.1"
   :depends-on
   (
    "prompt-for"         ; type safe user input.
@@ -14,6 +14,7 @@
    "lambda-fiddle"      ; tiny utilities for lambda-list processing.
    "tsort"              ; Topological sorting.
    "split-sequence"     ; Utiltity for split sequence.
+   "cl-package-locks"   ; Wrapper for package locking.
    )
   :components ((:file "package")
                (:file "use" :depends-on ("package"))

@@ -16,7 +16,7 @@
 	    (not(special-operator-p symbol)))
     (if(gethash symbol *enbroken*)
       (warn "~S is already enbroken." symbol)
-      (sb-ext:without-package-locks
+      (cl-package-locks:without-package-locks
 	(let((original(symbol-function symbol)))
 	  (setf (gethash symbol *enbroken*) original)
 	  (flet((enbreak(&rest args)
@@ -27,7 +27,7 @@
 
 (defun debreak(&rest args)
   (flet((debreak(symbol function)
-	  (sb-ext:without-package-locks
+	  (cl-package-locks:without-package-locks
 	    (setf (symbol-function symbol)function))
 	  (remhash symbol *enbroken*)))
     (if(null args)
