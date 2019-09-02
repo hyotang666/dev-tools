@@ -74,8 +74,12 @@
 
 (defmacro tcond(&rest clause*)
   `(COND
-     ,@(loop :for (pred) :in clause*
-	     :collect `(,pred ',pred))))
+     ,@(loop :for (pred . body) :in clause*
+	     :collect `((progn (format *trace-output*
+				       "~%;;; TRACING COND ~S"
+				       ',pred)
+			       (print ,pred))
+			,@body))))
 
 (defvar *trace-indent* -1)
 
