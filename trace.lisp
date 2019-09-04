@@ -69,7 +69,9 @@
 			  ,@declarations
 			  (format *trace-output* "~%;;; TRACING(~A ~{~S~^ ~})"
 				  ',name (list ,@(lambda-fiddle:extract-all-lambda-vars lambda-list)))
+			  (force-output *trace-output*)
 			  ,@body)))
+
      ,@body))
 
 (defmacro tcond(&rest clause*)
