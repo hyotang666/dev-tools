@@ -15,6 +15,7 @@
    "tsort"              ; Topological sorting.
    "split-sequence"     ; Utiltity for split sequence.
    "cl-package-locks"   ; Wrapper for package locking.
+   "quicklisp"          ; For press enter to continue.
    )
   :components ((:file "package")
                (:file "use" :depends-on ("package"))
@@ -39,6 +40,6 @@
                (:file "touch" :depends-on ("package"))
                #+sbcl
                (:file "profile" :depends-on ("package"))
-               (:file "test" :depends-on ("package" "load"))
+               (:file "test" :depends-on ("package" "load" "license"))
                (:file "readtable" :depends-on ("bench" "dribble" "trace" "echo" "average" "debug"))
                ))

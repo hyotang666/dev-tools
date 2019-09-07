@@ -65,6 +65,7 @@
     ;;;; test local projects
     #:test ; all specified author's systems are tested on this lisp.
     #:check ; specified system is tested on all lisps.
+    #:rec-test ; test all dependencies.
 
     ;;;; Easy to make file
     #:touch

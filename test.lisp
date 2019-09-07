@@ -27,3 +27,8 @@
 					   system impl))
 		      :output T
 		      :error-output *standard-output*)))
+
+(defun rec-test(system)
+  (dolist(system(all-dependencies system))
+    (asdf:test-system (print system))
+    (ql::press-enter-to-continue)))
