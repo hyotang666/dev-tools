@@ -117,3 +117,25 @@
 			 (FORMAT *TRACE-OUTPUT* "~%;;; TRACING, AND fails in cluase: ~S"
 				 ',clause)))
 		  clauses)))
+
+(defmacro tdo(binds return &body body)
+  `(do,binds
+     ,return
+     ,@(mapcar (lambda(bind)
+		 (let((var
+			(alexandria:ensure-car bind)))
+		   `(format *trace-output* "~%;;; TRACING DO ~S = ~S"
+			    ',var ,var)))
+	       binds)
+     ,@body))
+
+(defmacro tdo*(binds return &body body)
+  `(do*,binds
+     ,return
+     ,@(mapcar (lambda(bind)
+		 (let((var
+			(alexandria:ensure-car bind)))
+		   `(format *trace-output* "~%;;; TRACING DO* ~S = ~S"
+			    ',var ,var)))
+	       binds)
+     ,@body))

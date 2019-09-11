@@ -20,6 +20,8 @@
     #:tand
     #:tlet
     #:tlet*
+    #:tdo
+    #:tdo*
 
     ;;;; dribble.
     #:with-dribble ; #D
