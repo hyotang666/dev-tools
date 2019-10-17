@@ -1,39 +1,39 @@
 (in-package :dev-tools)
 
 (defun listup(package &optional target)
-  (do-external-symbols(s package)
-    (flet((TUNE-INDENT(list)
-	    (with-output-to-string(*standard-output*)
-	      (let*((*package*
-		      (symbol-package s))
-		    (lines
-		      (split-sequence:split-sequence #\newline
-						     (format nil "~VT~:S"
-							     (1+(length(symbol-name s)))
-							     list))))
-		(loop :initially (write-string (string-left-trim " "(car lines)))
-		      :for line :in (cdr lines)
-		      :do (format t "~%~A" line)
-		      :finally (format t "~@[~%~A~]~@[~%~A~]"
-				       (when(ignore-errors(fdefinition`(setf ,s)))
-					 "SETFable.")
-				       (documentation s 'function))))))
-	  (CLASS-FORMAT()
-	    (let((class
-		   (find-class s)))
-	      (format nil "; of type ~A~%~@[~A~]~?"
-		      (class-name (class-of class))
-		      (documentation s 'type)
-		      "~{~&~%~A ; Slot name.~@[~%~A~]~}"
-		      `(,(loop :for slot :in (c2mop:class-direct-slots class)
-			       :for name = (c2mop:slot-definition-name slot)
-			       :when (eq :external
-					 (nth-value 1(find-symbol (symbol-name name)
-								  package)))
-			       :collect (cl-ansi-text:yellow (princ-to-string name))
-			       :and
-			       :collect (handler-bind((warning #'muffle-warning))
-					  (documentation slot t))))))))
+  (flet((TUNE-INDENT(s list)
+	  (with-output-to-string(*standard-output*)
+	    (let*((*package*
+		    (symbol-package s))
+		  (lines
+		    (split-sequence:split-sequence #\newline
+						   (format nil "~VT~:S"
+							   (1+(length(symbol-name s)))
+							   list))))
+	      (loop :initially (write-string (string-left-trim " "(car lines)))
+		    :for line :in (cdr lines)
+		    :do (format t "~%~A" line)
+		    :finally (format t "~@[~%~A~]~@[~%~A~]"
+				     (when(ignore-errors(fdefinition`(setf ,s)))
+				       "SETFable.")
+				     (documentation s 'function))))))
+	(CLASS-FORMAT(s)
+	  (let((class
+		 (find-class s)))
+	    (format nil "; of type ~A~%~@[~A~]~?"
+		    (class-name (class-of class))
+		    (documentation s 'type)
+		    "~{~&~%~A ; Slot name.~@[~%~A~]~}"
+		    `(,(loop :for slot :in (c2mop:class-direct-slots class)
+			     :for name = (c2mop:slot-definition-name slot)
+			     :when (eq :external
+				       (nth-value 1(find-symbol (symbol-name name)
+								package)))
+			     :collect (cl-ansi-text:yellow (princ-to-string name))
+			     :and
+			     :collect (handler-bind((warning #'muffle-warning))
+					(documentation slot t))))))))
+    (do-external-symbols(s package)
       (let((roles(symbol-roles s)))
 	(when(or (null target)
 		 (find target roles))
@@ -43,7 +43,7 @@
 		      (cl-ansi-text:yellow(princ-to-string s))
 		      (case role
 			((:function :macro :generic-function)
-			 (TUNE-INDENT(millet:lambda-list s)))
+			 (TUNE-INDENT s (millet:lambda-list s)))
 			(:variable
 			  (format nil "; = ~A~%~@[~A~]"
 				  (if(boundp s)
@@ -54,10 +54,10 @@
 			  (format nil "; Type name.~%~@[~A~]"
 				  (documentation s 'type)))
 			(:class
-			  (CLASS-FORMAT))
+			  (CLASS-FORMAT s))
 			(:symbol-macro
 			  (format nil "; expanded to ~A"
-				  (TUNE-INDENT(macroexpand-1 s))))
+				  (TUNE-INDENT s (macroexpand-1 s))))
 			))))))))
   (values))
 
