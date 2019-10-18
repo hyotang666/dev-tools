@@ -1,5 +1,21 @@
 (in-package :dev-tools)
 
+;;;; LISTUP
+(declaim (ftype (function ((or symbol string package)
+			   &optional
+			   (member :command
+				   :macro
+				   :function
+				   :generic-function
+				   :variable
+				   :class
+				   :type
+				   :symbol-macro
+				   nil
+				   ))
+			  (values &optional))
+		listup))
+
 (defun listup(package &optional target)
   (flet((TUNE-INDENT(s list)
 	  (with-output-to-string(*standard-output*)
