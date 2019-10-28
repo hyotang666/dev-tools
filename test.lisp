@@ -21,11 +21,14 @@
 (defvar *ros-installed* '("clisp" "sbcl" "ccl-bin" "ecl"))
 (defun check(system)
   (dolist(impl *ros-installed*)
-    (format t "~&Run test ~S on ~A/" system impl)
+    (format t "~&Run test ~S on ~A~%" system impl)
+    (force-output)
     (uiop:run-program
       (format nil "ros -e '~S' -L ~A"
 	      `(progn
-		 (format t "~A~%"(lisp-implementation-version))
+		 (format t "~A~A~%"
+			 (lisp-implementation-type)
+			 (lisp-implementation-version))
 		 (if (find-package :uiop)
 		   (let(*compile-print* *compile-verbose*)
 		     (asdf:test-system ,system))
