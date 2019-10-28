@@ -22,11 +22,18 @@
 (defun check(system)
   (dolist(impl *ros-installed*)
     (format t "~&Run test ~S on ~A/" system impl)
-    (uiop:run-program (concatenate 'string "ros -e '(progn (format t \"~A~%\"(lisp-implementation-version))"
-				   (format nil "(if (find-package :uiop)(asdf:test-system ~(~S~))(write-line \"~A Give up to test because UIOP missing.\")))' -L ~:*~A"
-					   system impl))
-		      :output T
-		      :error-output *standard-output*)))
+    (uiop:run-program
+      (format nil "ros -e '~S' -L ~A"
+	      `(progn
+		 (format t "~A~%"(lisp-implementation-version))
+		 (if (find-package :uiop)
+		   (let(*compile-print* *compile-verbose*)
+		     (asdf:test-system ,system))
+		   (write-line ,(format nil "~A Give up to test ~S because UIOP missing."
+					impl system))))
+	      impl)
+      :output T
+      :error-output *standard-output*)))
 
 (defun rec-test(system)
   (dolist(system(all-dependencies system))
