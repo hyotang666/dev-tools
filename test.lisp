@@ -36,7 +36,8 @@
 					impl system))))
 	      impl)
       :output T
-      :error-output *standard-output*)))
+      :error-output *standard-output*
+      :ignore-error-status t)))
 
 (defun rec-test(system)
   (dolist(system(all-dependencies system))
