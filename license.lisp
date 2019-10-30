@@ -7,7 +7,7 @@
 
 (defun collect-licenses(system)
   (labels((license(system)
-	    (list (asdf:system-license system)
+	    (list (ignore-errors(asdf:system-license system))
 		  (asdf:coerce-name system))))
     (mapcar #'license (all-dependencies system))))
 
