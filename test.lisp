@@ -20,6 +20,14 @@
 
 (defvar *ros-installed* '("clisp" "sbcl" "ccl-bin" "ecl"))
 (defun check(system)
+  ;; Validation.
+  (restart-case(asdf:find-system system)
+    (use-value(new)
+      :report "Specify correct system."
+      :interactive (lambda()
+		     (list (prompt-for:prompt-for #'asdf:find-system "~&>> ")))
+      (setf system new)))
+  ;; Body
   (dolist(impl *ros-installed*)
     (format t "~&Run test ~S on ~A~%" system impl)
     (force-output)
