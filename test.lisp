@@ -29,18 +29,18 @@
       (setf system new)))
   ;; Body
   (dolist(impl *ros-installed*)
-    (format t "~&Run test ~S on ~A~%" system impl)
-    (force-output)
+    (format *trace-output* "~&Start to run test ~S on ~A~%" system impl)
+    (force-output *trace-output*)
     (multiple-value-bind(out error-out status)
       (uiop:run-program
 	(format nil "ros -e '~S' -L ~A"
 		`(progn
-		   (format t "~A~A~%"
-			   (lisp-implementation-type)
-			   (lisp-implementation-version))
 		   (if (find-package :uiop)
 		     (let(*compile-print* *compile-verbose*)
-		       (asdf:test-system ,system))
+		       (asdf:test-system ,system)
+		       (format *trace-output* "~&Finish test in ~A~A~2%"
+			       (lisp-implementation-type)
+			       (lisp-implementation-version)))
 		     (write-line ,(format nil "~A Give up to test ~S because UIOP missing."
 					  impl system))))
 		impl)
