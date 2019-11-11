@@ -11,7 +11,7 @@
 		  (asdf:coerce-name system))))
     (mapcar #'license (all-dependencies system))))
 
-(defun all-dependencies(system)
+(defun all-dependencies(&rest systems)
   (labels((rec(systems &optional acc)
 	    (if(endp systems)
 	      acc ; order is not issue.
@@ -22,7 +22,9 @@
 		     (union rest deps :test #'string-equal)
 		     rest)
 		   (pushnew system acc)))))
-    (rec (asdf:system-depends-on (asdf:find-system system)))))
+    (rec (alexandria:mappend
+	   (alexandria:compose #'asdf:system-depends-on #'asdf:find-system)
+	   systems))))
 
 (defun graph<=dependencies(dependencies) ; separated for easy debugging.
   (loop :for system :in dependencies
