@@ -66,6 +66,7 @@
 
     ;;;; test local projects
     #:test ; Tests current package system.
+    #:retest ; Update and test current package system.
     #:check ; specified system is tested on all lisps.
     #:rec-test ; test all dependencies.
 

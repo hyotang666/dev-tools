@@ -1,6 +1,6 @@
 ; vim: ft=lisp et
 (defsystem :dev-tools
-  :version "2.0.0"
+  :version "3.0.0"
   :depends-on
   (
    "prompt-for"         ; type safe user input.
@@ -40,6 +40,6 @@
                (:file "touch" :depends-on ("package"))
                #+sbcl
                (:file "profile" :depends-on ("package"))
-               (:file "test" :depends-on ("package" "load" "license"))
+               (:file "test" :depends-on ("package" "load" "license" "update"))
                (:file "readtable" :depends-on ("bench" "dribble" "trace" "echo" "average" "debug"))
                ))

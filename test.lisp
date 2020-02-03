@@ -1,5 +1,9 @@
 (in-package :dev-tools)
 
+(defun retest()
+  (update)
+  (test))
+
 (defun test ()
   (asdf:test-system (make-symbol (package-name *package*))))
 
