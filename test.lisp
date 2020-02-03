@@ -1,17 +1,7 @@
 (in-package :dev-tools)
 
-(defun test(author)
-  (dolist(name(local-projects))
-    (let((system(asdf:find-component name nil)))
-      (if(not system)
-	(warn "~S is not found." name)
-	(if (equal author (asdf:system-author system))
-	  (handler-case(call-with-silent #'asdf:test-system name)
-	    (error(c)(warn "Could not test ~S cause ~A"name c)))
-	  #++(warn "~S's author is ~S not ~S."
-		(asdf:coerce-name system)
-		(asdf:system-author system)
-		author))))))
+(defun test ()
+  (asdf:test-system (make-symbol (package-name *package*))))
 
 (defun local-projects()
   (flet((enkey(string)

@@ -65,7 +65,7 @@
     #:generate
 
     ;;;; test local projects
-    #:test ; all specified author's systems are tested on this lisp.
+    #:test ; Tests current package system.
     #:check ; specified system is tested on all lisps.
     #:rec-test ; test all dependencies.
 
