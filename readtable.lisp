@@ -1,6 +1,6 @@
 (in-package :dev-tools)
 
-(named-readtables:defreadtable dev-tools:syntax
+(named-readtables:defreadtable syntax
   (:merge :standard)
   (:dispatch-macro-char #\# #\L #'|#L-reader|)
   (:dispatch-macro-char #\# #\B #'|#B-reader|)
