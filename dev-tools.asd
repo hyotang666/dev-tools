@@ -1,6 +1,6 @@
 ; vim: ft=lisp et
 (defsystem :dev-tools
-  :version "3.0.0"
+  :version "3.0.1"
   :depends-on
   (
    "prompt-for"         ; type safe user input.
@@ -16,6 +16,7 @@
    "split-sequence"     ; Utiltity for split sequence.
    "cl-package-locks"   ; Wrapper for package locking.
    "quicklisp"          ; For press enter to continue.
+   "trivial-formatter"  ; Code formatting.
    )
   :components ((:file "package")
                (:file "use" :depends-on ("package"))

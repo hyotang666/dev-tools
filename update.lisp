@@ -34,5 +34,7 @@
       ;#+remora '(remora:load-system name :verbose verbose)
       ;; as default below.
       `(with-verbose-setting(verbose supplied-p)
+         #+sbcl
+         (trivial-formatter:fmt name :supersede)
 	 (asdf:load-system name))))
 
