@@ -43,4 +43,5 @@
                (:file "profile" :depends-on ("package"))
                (:file "test" :depends-on ("package" "load" "license" "update"))
                (:file "readtable" :depends-on ("bench" "dribble" "trace" "echo" "average" "debug"))
+               (:file "who-use" :depends-on ("package"))
                ))

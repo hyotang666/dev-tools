@@ -73,6 +73,8 @@
            #:all-dependencies
            #:find-dependency-route
            ;;;; Log output. Use instead of `CL:PRINT`.
-           #:log))
+           #:log
+           ;;;; Apropos.
+           #:who-use))
 
 (in-package :dev-tools)
