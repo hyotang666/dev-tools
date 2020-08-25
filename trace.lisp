@@ -59,8 +59,9 @@
                                (alexandria:parse-body body)
                              `(,name ,lambda-list ,@doc-string ,@declarations
                                (format *trace-output*
-                                       "~%;;; TRACING(~A ~{~S~^ ~})" ',name
+                                       "~%;;; TRACING~%~:<~A~^ ~:I~@_~@{~S~^ ~_~}~:>~%"
                                        (list
+                                       ',name
                                          ,@(lambda-fiddle:extract-all-lambda-vars
                                              lambda-list)))
                                (force-output *trace-output*) ,@body)))
