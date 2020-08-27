@@ -1,6 +1,6 @@
 ; vim: ft=lisp et
 (defsystem :dev-tools
-  :version "3.0.3"
+  :version "4.0.0"
   :depends-on
   (
    "prompt-for"         ; type safe user input.
@@ -17,6 +17,7 @@
    "cl-package-locks"   ; Wrapper for package locking.
    "quicklisp"          ; For press enter to continue.
    "trivial-formatter"  ; Code formatting.
+   "expander"           ; Macroexpand-all for macrolet-expander.
    )
   :components ((:file "package")
                (:file "use" :depends-on ("package"))

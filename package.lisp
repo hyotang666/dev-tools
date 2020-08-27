@@ -41,6 +41,7 @@
            ;; for macroexpand #M
            #:step-expand
            #:put-expand
+           #:macrolet-expand
            ;;;; average.
            #:average ; #V
            ;;;; inspect.

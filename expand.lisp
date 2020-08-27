@@ -58,3 +58,22 @@
                    :if-does-not-exist :create
                    :if-exists :supersede)
     (print (macroexpand-1 form))))
+
+;;;; MACROLET-EXPAND
+
+(defun macrolet-expand (form &optional environment)
+  (let ((expand #'expander:expand))
+    (unwind-protect
+        (progn
+         (setf (symbol-function 'expander:expand) (symbol-function 'macrolet-expand))
+         (etypecase form
+           (atom form)
+           (list
+            (typecase (car form)
+              ((cons (eql lambda) *) ; ((lambda () ...) ...)
+               `(,(second (expander::|lambda-expander| (car form) environment))
+                 ,@(expander::expand* (cdr form) environment)))
+              (list form) ; it may just data.
+              (t (expander::%expand form environment))))))
+      (setf (symbol-function 'expander:expand) expand))))
+
