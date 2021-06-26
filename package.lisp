@@ -8,9 +8,7 @@
            #:log
            #:list-all-packages
            #:package-used-by-list)
-  (:export ;;;; debug
-           #:with-debug ; #L
-           ;; for printf debug #E
+  (:export ;; for printf debug #E
            ;;;; qualified use package.
            #:use
            ;;;; trace.
@@ -33,17 +31,11 @@
            #:enable
            ;;;; update.
            #:update
-           ;;;; break.
-           #:die-after
-           #:enbreak
-           #:debreak
            ;;;; expand.
            ;; for macroexpand #M
            #:step-expand
            #:put-expand
            #:macrolet-expand
-           ;;;; average.
-           #:average ; #V
            ;;;; inspect.
            #:peep
            ;;;; named-readtable
@@ -53,15 +45,11 @@
            ;;;; disassemble-count
            #:disassemble-count
            #:disassemble<
-           ;;;; generate project directories.
-           #:generate
            ;;;; test local projects
            #:test ; Tests current package system.
            #:retest ; Update and test current package system.
            #:check ; specified system is tested on all lisps.
            #:rec-test ; test all dependencies.
-           ;;;; Easy to make file
-           #:touch
            ;;;; Package summary
            #:listup
            #:list-all-packages
