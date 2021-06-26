@@ -33,10 +33,9 @@
      ,@body))
 
 (defun generate-asd (name)
-  (with-generate ((make-pathname
-                   :name name
-                   :type "asd"
-                   :defaults *default-pathname-defaults*))
+  (with-generate ((make-pathname :name name
+                                 :type "asd"
+                                 :defaults *default-pathname-defaults*))
     (%generate-asd name)))
 
 (defun %generate-asd (name)
@@ -49,10 +48,9 @@
                ((:file ,name))))))
 
 (defun generate-lisp (name)
-  (with-generate ((make-pathname
-                   :name name
-                   :type "lisp"
-                   :defaults *default-pathname-defaults*))
+  (with-generate ((make-pathname :name name
+                                 :type "lisp"
+                                 :defaults *default-pathname-defaults*))
     (%generate-lisp name)))
 
 (defun %generate-lisp (name)
@@ -66,10 +64,9 @@
 (defun generate-readme
        (name
         &optional (*default-pathname-defaults* *default-pathname-defaults*))
-  (with-generate ((make-pathname
-                   :name "README"
-                   :type "md"
-                   :defaults *default-pathname-defaults*))
+  (with-generate ((make-pathname :name "README"
+                                 :type "md"
+                                 :defaults *default-pathname-defaults*))
     (%generate-readme name)))
 
 (defun %generate-readme (name)

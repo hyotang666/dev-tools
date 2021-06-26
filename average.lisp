@@ -4,7 +4,8 @@
   `(loop :repeat ,(+ n 2)
          :collect (times
                     (with-output-to-string (*trace-output*)
-                      (time (progn ,@body)))) :into acc
+                      (time (progn ,@body))))
+           :into acc
          :finally (return (%average acc ,n))))
 
 (defun %average (list n)

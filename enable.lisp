@@ -48,7 +48,7 @@
                       "DEV-TOOLS: #~A reader macro already used. : ~S~&Really do you want to replace it?"
                       char reader)
                 #0#))
-          #0#)))); nobody set it.
+          #0#)))) ; nobody set it.
 
 (defun reader-name (char)
   (or (find-symbol (format nil "#~A-reader" (char-upcase char)) :dev-tools)

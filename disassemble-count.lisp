@@ -9,8 +9,7 @@
     (with-input-from-string (s string)
       (loop :for line = (read-line s nil)
             :while line
-            :count line :into
-            count
+            :count line :into count
             :finally (return (- count #.(or #+sbcl 2 #+clisp 9)))))
     #+ccl
     (with-input-from-string (s string)

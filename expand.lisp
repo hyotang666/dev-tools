@@ -65,7 +65,8 @@
   (let ((expand #'expander:expand))
     (unwind-protect
         (progn
-         (setf (symbol-function 'expander:expand) (symbol-function 'macrolet-expand))
+         (setf (symbol-function 'expander:expand)
+                 (symbol-function 'macrolet-expand))
          (etypecase form
            (atom form)
            (list
@@ -76,4 +77,3 @@
               (list form) ; it may just data.
               (t (expander::%expand form environment))))))
       (setf (symbol-function 'expander:expand) expand))))
-

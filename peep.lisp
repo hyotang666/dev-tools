@@ -1,7 +1,6 @@
 (in-package :dev-tools)
 
-(defgeneric peep
-    (object &optional recp))
+(defgeneric peep (object &optional recp))
 
 (defmethod peep (o &optional recp) (format t "~&;; ~A" (type-of o)) (print o))
 

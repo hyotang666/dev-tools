@@ -60,20 +60,19 @@
                              `(,name ,lambda-list ,@doc-string ,@declarations
                                (format *trace-output*
                                        "~%;;; TRACING~%~:<~A~^ ~:I~@_~@{~S~^ ~_~}~:>~%"
-                                       (list
-                                       ',name
-                                         ,@(lambda-fiddle:extract-all-lambda-vars
-                                             lambda-list)))
+                                       (list ',name
+                                             ,@(lambda-fiddle:extract-all-lambda-vars
+                                                 lambda-list)))
                                (force-output *trace-output*) ,@body)))
      ,@body))
 
 (defmacro tcond (&rest clause*)
   `(cond
-    ,@(loop :for (pred . body) :in clause*
-            :collect `((progn
-                        (format *trace-output* "~%;;; TRACING COND ~S" ',pred)
-                        (print ,pred))
-                       ,@body))))
+     ,@(loop :for (pred . body) :in clause*
+             :collect `((progn
+                         (format *trace-output* "~%;;; TRACING COND ~S" ',pred)
+                         (print ,pred))
+                        ,@body))))
 
 (defvar *trace-indent* -1)
 

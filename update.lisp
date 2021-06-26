@@ -30,8 +30,7 @@
         (list (find type verbose :test #'eq)))))
 
 (defun update
-       (
-        &optional (name (find-symbol (package-name *package*)))
+       (&optional (name (find-symbol (package-name *package*)))
         (verbose nil supplied-p)
         &aux (name (or name (string-downcase (package-name *package*)))))
   (declare (ignorable supplied-p))
