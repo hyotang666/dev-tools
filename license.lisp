@@ -14,12 +14,26 @@
   (labels ((rec (systems &optional acc)
              (if (endp systems)
                  acc ; order is not issue.
-                 (body (asdf:find-system (car systems)) (cdr systems) acc)))
+                 (multiple-value-call #'body (find-system systems) acc)))
+           (find-system (systems)
+             (loop :for (name . rest) :on systems
+                   :for system
+                        = (etypecase name
+                            (string (asdf:find-system name))
+                            ((cons (eql :feature))
+                             (when (uiop:featurep (cadr name))
+                               (let ((spec (caddr name)))
+                                 (etypecase spec
+                                   (string (asdf:find-system spec))
+                                   ((cons (eql :require))
+                                    (asdf:find-system (cadr spec))))))))
+                   :when system
+                     :return (values system rest)))
            (body (system rest acc)
              (let ((deps (asdf:system-depends-on system)))
                (rec
                  (if deps
-                     (union rest deps :test #'string-equal)
+                     (union rest deps :test #'equalp)
                      rest)
                  (pushnew system acc)))))
     (rec
