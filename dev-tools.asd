@@ -1,6 +1,6 @@
 ; vim: ft=lisp et
 (defsystem :dev-tools
-  :version "4.0.3"
+  :version "4.0.4"
   :depends-on
   (
    "prompt-for"         ; type safe user input.

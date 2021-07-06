@@ -10,6 +10,17 @@
                    (asdf:coerce-name system))))
     (mapcar #'license (all-dependencies system))))
 
+(defun ensure-system (spec)
+  (etypecase spec
+    (asdf:system spec)
+    ((or symbol string) (asdf:find-system spec))
+    ((cons (eql :feature))
+     (when (uiop:featurep (cadr spec))
+       (let ((spec (caddr spec)))
+         (etypecase spec
+           (string (asdf:find-system spec))
+           ((cons (eql :require)) (asdf:find-system (cadr spec)))))))))
+
 (defun all-dependencies (&rest systems)
   (labels ((rec (systems &optional acc)
              (if (endp systems)
@@ -17,16 +28,7 @@
                  (multiple-value-call #'body (find-system systems) acc)))
            (find-system (systems)
              (loop :for (name . rest) :on systems
-                   :for system
-                        = (etypecase name
-                            (string (asdf:find-system name))
-                            ((cons (eql :feature))
-                             (when (uiop:featurep (cadr name))
-                               (let ((spec (caddr name)))
-                                 (etypecase spec
-                                   (string (asdf:find-system spec))
-                                   ((cons (eql :require))
-                                    (asdf:find-system (cadr spec))))))))
+                   :for system = (ensure-system name)
                    :when system
                      :return (values system rest)))
            (body (system rest acc)
@@ -43,8 +45,13 @@
 
 (defun graph<=dependencies (dependencies) ; separated for easy debugging.
   (loop :for system :in dependencies
-        :collect (cons (asdf:coerce-name system)
-                       (asdf:system-depends-on system))))
+        :collect (cons (asdf:coerce-name (ensure-system system))
+                       (mapcan
+			 (lambda (x)
+			   (let ((s (ensure-system x)))
+			     (when s
+			       (list (asdf:coerce-name s)))))
+                         (asdf:system-depends-on system)))))
 
 (defun dag (&rest names)
   (nreverse
@@ -83,10 +90,10 @@
 (defvar *indent* 0)
 
 (defun print-all-dependencies (system)
-  (format t "~VT~A~%" *indent* (asdf:coerce-name system))
+  (format t "~VT~A~%" *indent* (asdf:coerce-name (ensure-system system)))
   (let ((*indent* (+ 3 *indent*)))
     (map nil #'print-all-dependencies
-         (asdf:system-depends-on (asdf:find-system system)))))
+         (asdf:system-depends-on (ensure-system system)))))
 
 (defun find-dependency-route (d system)
   (let ((seen))
@@ -97,7 +104,7 @@
                      (push system seen)
                      (mapcan
                        (lambda (s)
-                         (rec d (asdf:find-system s)
+                         (rec d (ensure-system s)
                               (cons (asdf:coerce-name system) acc)))
                        (asdf:system-depends-on system))))))
-      (rec (asdf:find-system d) (asdf:find-system system)))))
+      (rec (ensure-system d) (ensure-system system)))))
