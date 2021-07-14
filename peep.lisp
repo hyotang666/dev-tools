@@ -2,7 +2,10 @@
 
 (defgeneric peep (object &optional recp))
 
-(defmethod peep (o &optional recp) (format t "~&;; ~A" (type-of o)) (print o))
+(defmethod peep (o &optional recp)
+  (declare (ignore recp))
+  (format t "~&;; ~A" (type-of o))
+  (print o))
 
 (defmethod peep ((o standard-object) &optional recp)
   (format t "~&;; ~A" (type-of o))
