@@ -18,3 +18,8 @@
                       :thereis (eq package (symbol-package symbol)))
             :collect p :into p*
           :finally (return (union p* (cl:package-used-by-list package))))))
+
+(defmacro in (package)
+  `(if (find-package ,package)
+       (in-package ,package)
+       *package*))
