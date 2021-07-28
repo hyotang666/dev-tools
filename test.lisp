@@ -47,4 +47,5 @@
 (defun rec-test (system)
   (dolist (system (all-dependencies system))
     (asdf:test-system (print system))
+    (force-output)
     (ql::press-enter-to-continue)))
