@@ -18,13 +18,9 @@
            (with-output-to-string (*standard-output*)
              (let* ((*package* (symbol-package s))
                     (lines
-                     (split-sequence:split-sequence #\Newline
-                                                    (format nil "~VT~:S"
-                                                            (1+
-                                                              (length
-                                                                (symbol-name
-                                                                  s)))
-                                                            list))))
+                     (uiop:split-string
+                       (format nil "~VT~:S" (1+ (length (symbol-name s))) list)
+                       :separator #.(string #\Newline))))
                (loop :initially (write-string
                                   (string-left-trim " " (car lines)))
                      :for line :in (cdr lines)
