@@ -57,6 +57,7 @@
            #:profile
            ;;;; Reccursively deleting package.
            #:delete-package
+           #:in ; in-package
            ;;;; Recursively collect all dependencies license.
            #:check-license
            #:all-dependencies
