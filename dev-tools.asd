@@ -3,19 +3,19 @@
   :version "5.0.1"
   :depends-on
   (
-   "prompt-for"         ; type safe user input.
-   "closer-mop"         ; wrapper for meta object protocols.
-   "named-readtables"   ; manage readtables.
-   "alexandria"         ; public domain utilities.
-   "millet"             ; wrapper for implementation dependent utilities.
-   "cl-ansi-text"       ; text colorizing.
-   #+sbcl "trestrul"    ; utilities for tree structured list.
-   "lambda-fiddle"      ; tiny utilities for lambda-list processing.
+   "alexandria"         ; Utilities implicitly depends on via (cl-ansi-text expander).
+   "uiop"               ; Utilities implicitly depends on via asdf.
+   #+sbcl "trestrul"    ; Utilities for tree structured list.
+   "lambda-fiddle"      ; Utilities for lambda-list processing.
+   "millet"             ; Wrapper of implementation dependent utilities.
+   "closer-mop"         ; Wrapper of meta object protocols.
+   "prompt-for"         ; User query.
+   "named-readtables"   ; Readtable manager.
+   "cl-ansi-text"       ; Text colorizing.
    "tsort"              ; Topological sorting.
    "quicklisp"          ; For press enter to continue.
    "trivial-formatter"  ; Code formatting.
    "expander"           ; Macroexpand-all for macrolet-expander.
-   "uiop"               ; Utilities.
    "asdf"               ; System object.
    )
   :components ((:file "package") ; (use)
