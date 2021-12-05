@@ -24,7 +24,10 @@
 (defun all-dependencies (&rest systems)
   (labels ((rec (systems &optional acc)
              (if (endp systems)
-                 acc ; order is not issue.
+                 ;; Order is not the issue.
+                 (remove-duplicates acc
+                                    :test #'equal
+                                    :key #'asdf:primary-system-name)
                  (multiple-value-call #'body (find-system systems) acc)))
            (find-system (systems)
              (loop :for (name . rest) :on systems

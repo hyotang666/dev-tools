@@ -1,6 +1,6 @@
 ; vim: ft=lisp et
 (defsystem :dev-tools
-  :version "5.0.1"
+  :version "5.0.2"
   :depends-on
   (
    "alexandria"         ; Utilities implicitly depends on via (cl-ansi-text expander).
